@@ -1,0 +1,60 @@
+spring:
+  config:
+    activate:
+      on-profile: prod
+  datasource:
+    url: jdbc:mysql://localhost:3306/plants_support?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    username: plantcare
+    password: ${MYSQL_ROOT_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        format_sql: false
+
+server:
+  port: 8080
+  address: 0.0.0.0
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+openapi:
+  service:
+    api-docs: api-service
+    server: ${APP_BASE_URL:http://localhost:8080}
+    title: PlantCare API Document
+    version: 1.0.0
+
+# AI Configuration
+openai:
+  api:
+    key: ${OPENAI_API_KEY}
+
+openrouter:
+  api:
+    key: ${OPENROUTER_API_KEY}
+    base-url: https://openrouter.ai/api/v1
+    model: openai/gpt-3.5-turbo
+
+# App Configuration
+app:
+  base-url: ${APP_BASE_URL:http://localhost:8080}
+
+# Logging Configuration
+logging:
+  level:
+    com.plantcare_backend: INFO
+    org.springframework.web: WARN
+    org.hibernate: WARN
+  file:
+    name: /var/log/plantcare/application.log
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"

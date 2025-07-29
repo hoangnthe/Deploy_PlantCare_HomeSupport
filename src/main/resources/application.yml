@@ -1,0 +1,71 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: tay-java-app
+  profiles:
+    active: @spring.profiles.active@
+
+  # Cấu hình file upload
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
+      enabled: true
+      file-size-threshold: 2KB
+      location: ${java.io.tmpdir}
+
+# PlantCare Configuration
+plantcare:
+  base-url: ${PLANTCARE_BASE_URL:http://localhost:4200}
+  scheduler:
+    cron: ${PLANTCARE_SCHEDULER_CRON:0 0 8 * * ?}
+    timezone: ${PLANTCARE_SCHEDULER_TIMEZONE:Asia/Ho_Chi_Minh}
+    batch-size: ${PLANTCARE_BATCH_SIZE:100}
+  email:
+    retry-attempts: ${PLANTCARE_EMAIL_RETRY_ATTEMPTS:3}
+    retry-delay: ${PLANTCARE_EMAIL_RETRY_DELAY:1000}
+  default-schedules:
+    watering:
+      frequency-days: ${PLANTCARE_DEFAULT_WATERING_DAYS:3}
+    fertilizing:
+      frequency-days: ${PLANTCARE_DEFAULT_FERTILIZING_DAYS:30}
+  # AI Configuration
+  ai:
+    plant-id:
+      api-key: ${PLANTCARE_AI_PLANT_ID_API_KEY:dHWJveFsVCycSKGouiySYtC8jvSvlZysh9PyL1nJQkurMaUAos}
+      base-url: ${PLANTCARE_AI_PLANT_ID_BASE_URL:https://api.plant.id/v2}
+      timeout: ${PLANTCARE_AI_TIMEOUT:30000}
+
+# Health check
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      probes:
+        enabled: true
+  health: # config for EKS
+    livenessState:
+      enabled: true
+    readinessState:
+      enabled: true
+  prometheus:
+    metrics:
+      export:
+        step: 5s
+        enabled: true
+
+# Logging
+logging:
+  level:
+    root: INFO
+    web: OFF
+    org.springframework: INFO
+    org.apache: OFF
+    kafka: OFF
+    com.plantcare_backend: DEBUG
+    org.springframework.web: DEBUG
